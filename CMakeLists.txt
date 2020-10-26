@@ -22,6 +22,37 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/salticidae/cmake
 add_subdirectory(salticidae)
 include_directories(salticidae/include)
 
+include(ExternalProject)
+include_directories(mcl/include)
+ExternalProject_Add(libmcl
+    SOURCE_DIR mcl
+    BUILD_COMMAND make lib/libmcl.a
+    INSTALL_COMMAND ""
+    BUILD_IN_SOURCE 1)
+
+add_library(mcl STATIC IMPORTED)
+set_target_properties(
+    mcl
+    PROPERTIES IMPORTED_LOCATION
+    ${CMAKE_CURRENT_SOURCE_DIR}/mcl/lib/libmcl.a)
+add_dependencies(mcl libmcl)
+
+
+include(ExternalProject)
+include_directories(bls/include)
+ExternalProject_Add(libbls384_256
+    SOURCE_DIR bls
+    BUILD_COMMAND make BLS_ETH=1 lib/libbls384_256.a
+    INSTALL_COMMAND ""
+    BUILD_IN_SOURCE 1)
+
+add_library(bls STATIC IMPORTED)
+set_target_properties(
+    bls
+    PROPERTIES IMPORTED_LOCATION
+    ${CMAKE_CURRENT_SOURCE_DIR}/bls/lib/libbls384_256.a)
+add_dependencies(bls libbls384_256)
+
 find_package(OpenSSL REQUIRED)
 find_package(Threads REQUIRED)
 
@@ -61,11 +92,11 @@ if(BUILD_SHARED)
     set_property(TARGET hotstuff PROPERTY POSITION_INDEPENDENT_CODE 1)
     add_library(hotstuff_shared SHARED $<TARGET_OBJECTS:hotstuff>)
     set_target_properties(hotstuff_shared PROPERTIES OUTPUT_NAME "hotstuff")
-    target_link_libraries(hotstuff_shared salticidae_static secp256k1 crypto ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(hotstuff_shared salticidae_static secp256k1 crypto bls mcl ${CMAKE_THREAD_LIBS_INIT})
 endif()
 add_library(hotstuff_static STATIC $<TARGET_OBJECTS:hotstuff>)
 set_target_properties(hotstuff_static PROPERTIES OUTPUT_NAME "hotstuff")
-target_link_libraries(hotstuff_static salticidae_static secp256k1 crypto ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(hotstuff_static salticidae_static secp256k1 crypto bls mcl ${CMAKE_THREAD_LIBS_INIT})
 
 add_subdirectory(test)
 

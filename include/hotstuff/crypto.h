@@ -23,6 +23,7 @@
 #include "salticidae/crypto.h"
 #include "hotstuff/type.h"
 #include "hotstuff/task.h"
+#include <bls/bls384_256.h>
 
 namespace hotstuff {
 
