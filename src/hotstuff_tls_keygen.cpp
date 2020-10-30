@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-#include <error.h>
+#include <mach/mach.h>
+#include <mach/error.h>
 #include "salticidae/util.h"
 #include "salticidae/crypto.h"
 #include "hotstuff/type.h"
@@ -32,7 +33,7 @@ int main(int argc, char **argv) {
     config.parse(argc, argv);
     int n = opt_n->get();
     if (n < 1)
-        error(1, 0, "n must be >0");
+        mach_error("n must be >0", 1);
     while (n--)
     {
         priv_key = new salticidae::PKey(salticidae::PKey::create_privkey_rsa());

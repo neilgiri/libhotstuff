@@ -26,7 +26,7 @@ include(ExternalProject)
 include_directories(mcl/include)
 ExternalProject_Add(libmcl
     SOURCE_DIR mcl
-    BUILD_COMMAND make lib/libmcl.a
+    BUILD_COMMAND make
     INSTALL_COMMAND ""
     BUILD_IN_SOURCE 1)
 
@@ -87,16 +87,17 @@ add_library(hotstuff
     src/hotstuff.cpp
     )
 
+
 option(BUILD_SHARED "build shared library." OFF)
 if(BUILD_SHARED)
     set_property(TARGET hotstuff PROPERTY POSITION_INDEPENDENT_CODE 1)
     add_library(hotstuff_shared SHARED $<TARGET_OBJECTS:hotstuff>)
     set_target_properties(hotstuff_shared PROPERTIES OUTPUT_NAME "hotstuff")
-    target_link_libraries(hotstuff_shared salticidae_static secp256k1 crypto bls mcl ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(hotstuff_shared salticidae_static secp256k1 bls mcl ${CMAKE_THREAD_LIBS_INIT})
 endif()
 add_library(hotstuff_static STATIC $<TARGET_OBJECTS:hotstuff>)
 set_target_properties(hotstuff_static PROPERTIES OUTPUT_NAME "hotstuff")
-target_link_libraries(hotstuff_static salticidae_static secp256k1 crypto bls mcl ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(hotstuff_static salticidae_static secp256k1 bls mcl ${CMAKE_THREAD_LIBS_INIT})
 
 add_subdirectory(test)
 
@@ -135,8 +136,8 @@ if (DOXYGEN_FOUND)
 endif(DOXYGEN_FOUND)
 
 #set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -no-pie -pg")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -W -Wall -Wextra -pedantic -Wsuggest-override")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -W -Wall -Wextra -pedantic -Wsuggest-override")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -W -Wall -Wextra -pedantic -Wsuggest-override -I/usr/local/include -L/usr/local/lib -L/usr/local/opt/openssl/lib")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -W -Wall -Wextra -pedantic -Wsuggest-override -I/usr/local/include -L/usr/local/lib -L/usr/local/opt/openssl/lib")
 
 macro(remove_cxx_flag flag)
   string(REPLACE "${flag}" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")

@@ -17,6 +17,8 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -W -Wall -Wextra -pedantic -Wsuggest-override -I/usr/local/include -L/usr/local/lib -L/usr/local/opt/openssl/lib")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -W -Wall -Wextra -pedantic -Wsuggest-override -I/usr/local/include -L/usr/local/lib -L/usr/local/opt/openssl/lib")
 
 add_executable(hotstuff-app hotstuff_app.cpp)
 target_link_libraries(hotstuff-app hotstuff_static)
